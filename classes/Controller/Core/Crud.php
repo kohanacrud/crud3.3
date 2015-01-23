@@ -86,10 +86,8 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         Controller::redirect(Kohana::$config->load('crudconfig.base_url'));
 
-
     }
 
-    //
     private function uploads_dir_absolut($dir_path)
     {
         //пути
