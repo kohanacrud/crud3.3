@@ -3,31 +3,28 @@
 <?=isset($script_validate) ? $script_validate:''?>
 
 <script>
-    $(document).on('click', '#loading-example-btn', function(){
+    $(document).ready(function(){
+        $(document).on('click', '#loading-example-btn', function(){
 
-        var form_add = $('#w-form-add');
-        tinyMCE.triggerSave();
-        form_add.attr('target','hiddenframe');
-        form_add.submit();
-//
-//        tinyMCE.triggerSave();
-//
-//        var btn = $(this);
-//        btn.button('loading');
-//
-//        $.ajax({
-//            type: "GET",
-//            dataType: "html",
-//            url: "add",
-//            data: $('#w-form-add').serialize()
-////            success: function(response) {
-////
-////            }
-//        }).always(function () {
-//                btn.button('reset');
-//        });
+            var form_add = $('#w-form-add');
+            tinyMCE.triggerSave();
+            form_add.attr('target','hiddenframe');
+            form_add.submit();
+            $(this).attr("disabled", "disabled");
+
+        });
+
+        $(document).on('click', '.w-save-add', function(){
+
+            if ($('#w-form-add').attr("target")) {
+                $('#w-form-add').removeAttr("target");
+                document.location.href = '/<?=Kohana::$config->load('crudconfig.base_url')?>';
+            } else {
+                $('#w-form-add').submit();
+            }
+
+        });
     });
-
 
 
 </script>
@@ -198,7 +195,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$add_property['obj']?>"/>
                         <input type="hidden"  name="add"/>
-                        <button type="submit" class="btn btn-default btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button type="button" class="btn btn-default btn-lg w-save-add"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                         <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
                 </div>
