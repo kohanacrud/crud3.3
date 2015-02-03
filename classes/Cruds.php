@@ -78,10 +78,6 @@ class Cruds extends Controller_Core_Main {
     public function __construct () {
         parent::before();
 
-        //для редиректа
-        $this->curent_uri = explode('_', $debug[1]['class']);
-        $this->curent_uri = mb_strtolower($this->curent_uri[1]);
-
     }
 
 
@@ -96,6 +92,10 @@ class Cruds extends Controller_Core_Main {
             'class' => $debug[1]['class'],
             'callback_function_name' => __FUNCTION__
         );
+
+        //для редиректа
+        $this->curent_uri = explode('_', $debug[1]['class']);
+        $this->curent_uri = mb_strtolower($this->curent_uri[1]);
 
     }
     //отображаемые столбцы
