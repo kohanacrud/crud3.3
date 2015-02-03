@@ -5,3 +5,20 @@
 Призван освободить разработчика от решений тривиальных задач.
 
 v.Kohana 3.3.x
+
+Quick Start
+
+class Controller_Test extends Controller {
+
+public function action_index() {
+    $this->response->body(self::asd()->render());
+}
+
+
+public static  function asd () {
+    $crud = new Cruds;
+    $crud->load_table('table');
+}
+}
+
+Для начала роботы требуется базовые настройки. Это создание объекта класса и определение таблицы в нашем случае table. Создание объекта класса должно находится в статическом методе, название произвольное. И непосредственно вывод self::asd()->render(). См. Пример выше.
