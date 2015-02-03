@@ -84,7 +84,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 $retw->callback_after_delete['name_function']), $query_array_del);
         }
 
-        Controller::redirect(Kohana::$config->load('crudconfig.base_url'));
+        Controller::redirect($retw->curent_uri);
 
     }
 
@@ -317,7 +317,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
             }
 
-            Controller::redirect(Kohana::$config->load('crudconfig.base_url'));
+            Controller::redirect($retw->curent_uri);
         }
 
         //вид edit
@@ -441,7 +441,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 Arr::get($_POST, 'func')), $query_array_del);
         }
 
-        Controller::redirect(Kohana::$config->load('crudconfig.base_url'));
+        Controller::redirect($retw->curent_uri);
 
 
     }
@@ -679,7 +679,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
             }
 
-            Controller::redirect(Kohana::$config->load('crudconfig.base_url'));
+            Controller::redirect($retw->curent_uri);
 
         }
 

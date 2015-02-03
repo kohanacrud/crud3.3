@@ -41,7 +41,7 @@ Route::set('NewAction', Kohana::$config->load('crudconfig.base_url').'/new(/<url
         'action'     => 'newAction',
     ));
 
-Route::set('newAjax', Kohana::$config->load('crudconfig.base_url').'/ajax/showTableAjax')
+Route::set('newAjax', '<controller>/showTableAjax')
     ->defaults(array(
         'directory' => 'core',
         'controller' => 'ajax',
@@ -49,7 +49,7 @@ Route::set('newAjax', Kohana::$config->load('crudconfig.base_url').'/ajax/showTa
     ));
 
 //static
-Route::set('docs/media', Kohana::$config->load('crudconfig.base_url').'/media(/<file>)', array('file' => '.+'))
+Route::set('docs/media', '<controller>/media(/<file>)', array('file' => '.+'))
     ->defaults(array(
         'directory' => 'core',
         'controller' => 'ajax',

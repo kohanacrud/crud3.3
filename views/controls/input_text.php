@@ -93,15 +93,15 @@
 
     ?>
 
-    <?if ($type_field == 'text'):?>
+    <?if ($type_field != 'time' or $type_field != 'datetime' or $type_field != 'date') {?>
         <input <?=$attr?> class="form-control"
-                          type="text"
+                          type="<?=$type_field?>"
                           name="<?=$name_fied?>"
                           value="<?if (!empty($value_fild)) echo $value_fild?>"
                           id="<?=$name_fied?>"/>
         <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
         <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
-    <?else:?>
+    <?} else {?>
 
         <div class="input-group date col-md-5 <?=$data_class?>" data-date="" data-date-format="<?=$data_format?>" data-link-field="<?=$name_fied?>" data-link-format="<?=$data_format?>">
             <input <?=$attr?> class="form-control"
@@ -118,6 +118,6 @@
         <input type="hidden" id="<?=$name_fied?>" value="" />
 
 
-    <?endif?>
+    <?}?>
 
 <?endif?>

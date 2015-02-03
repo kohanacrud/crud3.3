@@ -68,6 +68,8 @@ class Cruds extends Controller_Core_Main {
     public $validation = null; //принимает масив значений для валидации
     public $validation_messages = null; //принимает масив строк которые отображаются в случае ошибки
 
+    public $curent_uri = null;
+
     private $rules = array();
     private $messages = array();
 
@@ -75,6 +77,10 @@ class Cruds extends Controller_Core_Main {
 
     public function __construct () {
         parent::before();
+
+        //для редиректа
+        $this->curent_uri = explode('_', $debug[1]['class']);
+        $this->curent_uri = mb_strtolower($this->curent_uri[1]);
 
     }
 
@@ -626,8 +632,8 @@ class Cruds extends Controller_Core_Main {
     public function shows_type_input_default ($information_shem) {
 
         $retuyr = array(
-            'varchar' => array('tag' => 'textarea'),
-            'text' => 'text',
+            'varchar' => 'text',
+            'text' => array('tag' => 'textarea'),
             'date' => 'date',
             'int' => 'number',
             'bigint' => 'number',
