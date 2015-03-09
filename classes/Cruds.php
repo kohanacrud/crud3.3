@@ -94,8 +94,8 @@ class Cruds extends Controller_Core_Main {
         );
 
         //для редиректа
-        $this->curent_uri = explode('_', $debug[1]['class']);
-        $this->curent_uri = mb_strtolower($this->curent_uri[1]);
+        $this->curent_uri = parse_url(Request::$initial->referrer());
+        $this->curent_uri = $this->curent_uri['path'];
 
     }
     //отображаемые столбцы

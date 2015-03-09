@@ -84,7 +84,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 $retw->callback_after_delete['name_function']), $query_array_del);
         }
 
-        Controller::redirect($retw->curent_uri);
+        Request::initial()->redirect($retw->curent_uri);
 
     }
 
@@ -317,7 +317,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
             }
 
-            Controller::redirect($retw->curent_uri);
+            Controller::redirect($_POST['curent_uri']);
         }
 
         //вид edit
@@ -383,7 +383,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $select_multiselect = null;
         }
 
-
+        $viev_edit->curent_uri = $retw->curent_uri;
         $viev_edit->edit_property = array('field' => $field,
                                             'select_muliselect' => $select_multiselect,
                                             'disable_editor' => $disable_editor, //отключение редактора
@@ -403,9 +403,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
         $this->template->styles = $crud_style['styles'];
 
     }
-
-
-
 
 
 
@@ -679,7 +676,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
             }
 
-            Controller::redirect($retw->curent_uri);
+            Controller::redirect($_POST['curent_uri']);
 
         }
 
@@ -743,6 +740,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $viev_add->script_validate = $retw->validation;
         }
 
+        $viev_add->curent_uri = $retw->curent_uri;
         $viev_add->add_property = array('field' => $fields,
             'obj' => $_GET['obj'],
             'disable_editor' => $disable_editor, //отключение редактора

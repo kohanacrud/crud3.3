@@ -22,7 +22,7 @@ class Controller_Test extends Controller
     public static function adminpanel()
     {
         $crud = new Cruds;
-        $crud->load_table('example');
+        $crud->load_table('city');
 
         return $crud;
 

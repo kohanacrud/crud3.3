@@ -195,6 +195,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="hidden" name="obj" value="<?=$add_property['obj']?>"/>
                         <input type="hidden"  name="add"/>
+                        <input type="hidden" name="curent_uri" value="<?=$curent_uri?>"/>
                         <button type="button" class="btn btn-default btn-lg w-save-add"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
                         <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
