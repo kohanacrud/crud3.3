@@ -10,12 +10,9 @@ abstract class Controller_Core_Main extends Controller_Template {
 
     public $template = 'page/main_template';
 
-
-
     public function before () {
 
         parent::before();
-
 
     }
 
