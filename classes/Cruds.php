@@ -72,6 +72,8 @@ class Cruds extends Controller_Core_Main {
 
     private $rules = array();
     private $messages = array();
+    public $join_table = null; //масив таблиц для обьединения
+
 
     public static $id = null; //хранит id записи
 
@@ -661,8 +663,21 @@ class Cruds extends Controller_Core_Main {
 
 
         foreach($information_shem as $row) {
+
+            $flag = false;
+
+            //проверяем нет ли связаных таблиц
+            if ($this->join_table != null) {
+                foreach ($this->join_table as $row_join) {
+
+                    if ($row['TABLE_NAME'] == $row_join[1]) {
+                        $row['COLUMN_NAME'] = $row_join[1].'@'.$row['COLUMN_NAME'];
+                        $flag = true;
+                    }
+                }
+            }
             //все кроме первичного ключа
-            if ($row['COLUMN_KEY'] != 'PRI') {
+            if ($row['COLUMN_KEY'] != 'PRI' or $row['COLUMN_KEY'] == 'MUL' or $flag === true) {
                 if (isset($retuyr[$row['DATA_TYPE']])) {
                     $new[$row['COLUMN_NAME']] = $retuyr[$row['DATA_TYPE']];
                 } else {
@@ -819,11 +834,36 @@ class Cruds extends Controller_Core_Main {
     }
 
     //изминяет поле select
-
     public function select_multiselect ($field_name) {
         $this->select_multiselect[$field_name] = 'multiple';
     }
 
+    /**
+     * передаем масив таблиц для обьединения
+     */
+    public function join (){
+        $this->join_table[] = func_get_args();
+    }
+
+
+    public static function parse_name_column ($arr) {
+
+        $data = array();
+        $tmp = '';
+        foreach ($arr as $name_count => $rows) {
+            $arr = explode("@", $name_count);
+
+            if (isset($arr[1])) {
+                $data['join'][$arr[0]][$arr[1]] = $rows;
+            } else {
+                $data['table'][$arr[0]] = $rows;
+            }
+
+        }
+
+        return $data;
+
+    }
 
 }
 

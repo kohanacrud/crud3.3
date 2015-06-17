@@ -12,15 +12,38 @@ class Model_All extends Model
     private $field_names_array; //масив полей таблицы которые были спарсены напр. {username} ( {last_name} {first_name} )
 
     //выборка по id или без него
-    public function select_all_where ($table, $id = null) {
+    public function select_all_where ($table, $id = null, $join = null) {
 
         $key_primary = $this->information_table($table, true);
         $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
         if ($id != null) {
-            return DB::select()->from($table)
-            ->where($this->key_primary, '=', $id)
-            ->execute()->as_array();
+
+            if (!empty($join)) {
+                $query_table = DB::select()->from($table)
+                    ->where($this->key_primary, '=', $id)
+                    ->execute()->as_array();
+
+                $result = array();
+                $join_arr = array();
+                foreach ($join as $rows) {
+                    $query_join = DB::select()->from($rows[1])
+                        ->where($rows[2], '=', $query_table[0][$rows[0]])
+                        ->execute()->as_array();
+                    foreach ($query_join[0] as $name_column => $row_join) {
+                        $join_arr[$rows[1].'@'.$name_column] = $row_join;
+                    }
+                    $result = array_merge($result, $join_arr);
+                }
+                $result = array_merge($query_table[0], $result);
+                $query[0] = $result;
+                return $query;
+
+            } else {
+               return DB::select()->from($table)
+                    ->where($this->key_primary, '=', $id)
+                    ->execute()->as_array();
+            }
 
         } else {
             return DB::select()->from($table)
@@ -52,14 +75,41 @@ class Model_All extends Model
     }
 
     //ОБНОВЛЕНЕ
-    public function update ($table, $field, $id) {
-        $key_primary = $this->information_table($table, true);
-        $this->key_primary = $key_primary[0]->COLUMN_NAME;
-        DB::update($table)
-            ->set($field)
-            ->where($this->key_primary, '=', $id)
-            ->execute();
+    public function update ($table, $field, $id, $key_primary, $join = null) {
+
+
+        if ($join != null) {
+
+            $array_update = Cruds::parse_name_column($field);
+
+            DB::update($table)
+                ->set($array_update['table'])
+                ->where($key_primary, '=', $id)
+                ->execute();
+
+            foreach ($array_update['join'] as $name_table => $row_join) {
+
+                foreach ($join as $joines) {
+                    if ($joines[1] == $name_table) {
+                        $id = $row_join[$joines[3]];
+                        DB::update($name_table)
+                            ->set($row_join)
+                            ->where($joines[3], '=', $id)
+                            ->execute();
+                    }
+                }
+
+            }
+
+        } else {
+
+            DB::update($table)
+                ->set($field)
+                ->where($key_primary, '=', $id)
+                ->execute();
+        }
     }
+
     //добавление
     public function insert ($table, $column_table, $value_table) {
         $query = DB::insert($table, $column_table)
@@ -69,16 +119,50 @@ class Model_All extends Model
     }
 
     //ПОЛУЧАЕМ названия ПОЛЯ ТАБЛИИЦЫ
-    public function name_count ($table) {
-        $name_colums_table = DB::query(Database::SELECT,
-            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
-        $name_colums_table->param(':tab', $table);
-        $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+    public function name_count ($table, $join = null) {
 
-        return $name_colums_table->execute()->as_array();
+
+        if ($join != null) {
+
+            $name_table = DB::query(Database::SELECT,
+                'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+            $name_table->param(':tab', $table);
+            $name_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+            $name_table = $name_table->cached()->execute()->as_array();
+
+            $join_arr = array();
+            $result_mod = array();
+
+            foreach ($join as $row_join) {
+
+                $name_colums_table = DB::query(Database::SELECT,
+                    'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+                $name_colums_table->param(':tab', $row_join[1]);
+                $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+                $result = $name_colums_table->cached()->execute()->as_array();
+
+                foreach ($result as $result_join) {
+                    $result_mod[] = array('COLUMN_NAME' => $row_join[1].'@'.$result_join['COLUMN_NAME']);
+                }
+
+                $join_arr = array_merge($join_arr ,$result_mod);
+            }
+
+            $result = array_merge($name_table,  $join_arr);
+            return $result;
+
+        } else {
+
+            $name_colums_table = DB::query(Database::SELECT,
+                'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+            $name_colums_table->param(':tab', $table);
+            $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+            return $name_colums_table->execute()->as_array();
+        }
     }
 
-    public function information_table ($table, $key_primary = null) {
+    public function information_table ($table, $key_primary = null, $join_table = null) {
 
         if ($key_primary != null) {
             $key_primary = 'PRI';
@@ -91,12 +175,30 @@ class Model_All extends Model
             return $name_colums_table->as_object()->execute();
         } else {
 
-            $name_colums_table = DB::query(Database::SELECT,
-                'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
-            $name_colums_table->param(':tab', $table);
-            $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+            if ($join_table != null) {
 
-            return $name_colums_table->execute()->as_array();
+                $join_table[] = array(1 => $table);
+                $result_arr = array();
+
+                foreach ($join_table as $tableName => $rows) {
+                    $name_colums_table = DB::query(Database::SELECT,
+                        'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+                    $name_colums_table->param(':tab', $rows[1]);
+                    $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+                    $result = $name_colums_table->cached()->execute()->as_array();
+                    $result_arr = array_merge($result_arr,$result);
+                }
+
+                return $result_arr;
+            } else {
+                $name_colums_table = DB::query(Database::SELECT,
+                    'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
+                $name_colums_table->param(':tab', $table);
+                $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+                return $name_colums_table->cached()->execute()->as_array();
+            }
+
         }
 
 
@@ -123,20 +225,19 @@ class Model_All extends Model
     private function information_data_type ($table) {
 
 
+        $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
+                                                      FROM INFORMATION_SCHEMA.COLUMNS
+                                                      WHERE table_name = :tab
+                                                        AND TABLE_SCHEMA = :bas');
+        $data_type->param(':tab', $table);
+        $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
 
-    $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
-                                                  FROM INFORMATION_SCHEMA.COLUMNS
-                                                  WHERE table_name = :tab
-                                                    AND TABLE_SCHEMA = :bas');
-    $data_type->param(':tab', $table);
-    $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
+        foreach ($data_type->execute()->as_array() as $row) {
+            $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+        }
 
-    foreach ($data_type->execute()->as_array() as $row) {
-        $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+        return $result;
     }
-
-    return $result;
-}
 
 
     //пагинация

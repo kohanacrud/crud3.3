@@ -156,13 +156,11 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
             $this->id = Arr::get($_POST, $key_primary);
 
-
-            $name_count = Model::factory('All')->name_count($retw->table);
+            $name_count = Model::factory('All')->name_count($retw->table, $retw->join_table);
+          // die (print_r($_POST));
             //перебори формирования массива для передачи в модель для обновления записей
             //ищем в масиве $_GET поля которые вернула модель name_count
             foreach ($name_count as $name_count_rows) {
-
-
 
                 if (isset($_POST[$name_count_rows['COLUMN_NAME']])) {
                     //если это масив то сериализуем
@@ -299,7 +297,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
                     }
 
-                    $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
+                    $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary], $key_primary, $retw->join_table);
                 }
             } else {
 
@@ -314,7 +312,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
                 }
 
-                $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary]);
+                $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary], $key_primary,  $retw->join_table);
             }
 
             Controller::redirect($_POST['curent_uri']);
@@ -329,8 +327,9 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $viev_edit->script_validate = $retw->validation;
         }
 
-        $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
+        $fields = Model::factory('All')->select_all_where($retw->table,$this->id, $retw->join_table);
         $fields = $fields[0];
+        //die(print_r($fields));
 
         //если обявлен метод один ко многим то данные для поля берем с другой таблицы
         if ($retw->set_one_to_many) {
@@ -348,8 +347,11 @@ class Controller_Core_Crud extends Controller_Core_Main {
         }
 
         //типы полей на основе типов mysql
-        $information_shem = Model::factory('All')->information_table($retw->table);
+        $information_shem = Model::factory('All')->information_table($retw->table, null, $retw->join_table);
+        //die(print_r($information_shem));
         $type_field = $retw->shows_type_input_default($information_shem);
+
+       // die(print_r($type_field));
 
         //полечаем значения для переопределения типов полей
         if (!empty($retw->set_field_type)) {
