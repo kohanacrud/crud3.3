@@ -73,7 +73,7 @@ class Cruds extends Controller_Core_Main {
     private $rules = array();
     private $messages = array();
     public $join_table = null; //масив таблиц для обьединения
-
+    public $table_join_key = null; //масив таблица поле pri table@pagespri
 
     public static $id = null; //хранит id записи
 
@@ -843,9 +843,17 @@ class Cruds extends Controller_Core_Main {
      */
     public function join (){
         $this->join_table[] = func_get_args();
+        foreach ($this->join_table as $rows) {
+            $this->table_join_key[$rows[1].'@'.$rows[3]] = $rows[1].'@'.$rows[3];
+        }
     }
 
 
+    /**
+     * @param $arr
+     * @return array
+     * формируем масив
+     */
     public static function parse_name_column ($arr) {
 
         $data = array();
@@ -858,11 +866,8 @@ class Cruds extends Controller_Core_Main {
             } else {
                 $data['table'][$arr[0]] = $rows;
             }
-
         }
-
         return $data;
-
     }
 
 }

@@ -28,8 +28,7 @@
 
 
 </script>
-<!--<pre>--><?//print_r($add_property)?><!--</pre>-->
-
+<pre><?print_r($add_property)?></pre>
 
 <div class="container">
     <div class="row">
@@ -39,7 +38,9 @@
 
                 <?foreach ($add_property['field'] as  $name_fied):?>
 
-                    <div class="form-group has-feedback">
+                    <?if (empty($add_property['join_key'][$name_fied])):?>
+
+                        <div class="form-group has-feedback">
 
                         <?if (isset($add_property['name_colums_table_show'][$name_fied])):?>
                                 <label for="<?=$name_fied?>" class="col-sm-2 control-label"><?=$add_property['name_colums_table_show'][$name_fied]?></label>
@@ -188,6 +189,9 @@
                         </div>
 
                     </div>
+
+                    <?endif?>
+
                 <?endforeach?>
 
 

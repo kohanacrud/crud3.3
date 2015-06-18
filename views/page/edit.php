@@ -39,7 +39,7 @@
             <form method="POST" enctype="multipart/form-data" id="w-form-edit" class="form-horizontal" role="form" >
 
                 <?foreach ($edit_property['field'] as $name_fied => $value_fild):?>
-                    <?if ($name_fied != $edit_property['key_primary']):?>
+                    <?if ($name_fied != $edit_property['key_primary'] and empty($edit_property['join_key'][$name_fied])):?>
                         <div class="form-group has-feedback">
                             <?if (isset($edit_property['name_colums_table_show'][$name_fied])):?>
 
@@ -211,6 +211,7 @@
 
                         <?//id в скрытом поле?>
                         <input type="hidden"  name="<?=$name_fied?>" value="<?=$value_fild?>">
+
 
                     <?endif?>
                 <?endforeach?>

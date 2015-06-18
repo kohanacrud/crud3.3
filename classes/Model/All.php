@@ -111,11 +111,41 @@ class Model_All extends Model
     }
 
     //добавление
-    public function insert ($table, $column_table, $value_table) {
-        $query = DB::insert($table, $column_table)
-            ->values($value_table)
-            ->execute();
-        return $query[0]; //возвращаем id
+    public function insert ($table, $column_table, $value_table, $join = null) {
+
+        //таблицы связаные если есть
+        if ($join != null) {
+
+            $array_insert = Cruds::parse_name_column(array_combine($column_table, $value_table));
+
+            $query = DB::insert($table, array_keys($array_insert['table']))
+                ->values(array_values($array_insert['table']))
+                ->execute();
+
+            foreach ($array_insert['join'] as $name_table => $row_join) {
+
+                foreach ($join as $joines) {
+                    if (isset($row_join[$joines[2]])) {
+                        $row_join[$joines[2]] = $query[0];
+                    }
+                }
+
+                $query_j = DB::insert($name_table, array_keys($row_join))
+                    ->values(array_values($row_join))
+                    ->execute();
+            }
+
+            return $query[0];
+
+        } else {
+
+            $query = DB::insert($table, $column_table)
+                ->values($value_table)
+                ->execute();
+            return $query[0]; //возвращаем id
+
+        }
+
     }
 
     //ПОЛУЧАЕМ названия ПОЛЯ ТАБЛИИЦЫ

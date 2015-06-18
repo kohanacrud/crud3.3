@@ -270,7 +270,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
                 $retw->callback_before_edit($retw->callback_before_edit['name_function']);
                 //получаем масив строку таблицы которая должна быть редактирована
-                $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id);
+                $query_array_edit = Model::factory('All')->select_all_where($retw->table,$this->id, $retw->join_table);
                 //получаем данные из других таблиц для хука
                 if ($retw->set_one_to_many) {
                     $query_array_edit = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_edit[0], $this->id, false);
@@ -393,6 +393,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                                             'type_field_upload' => $type_field_upload, //масив параметров для поля file
                                             'type_field' => $type_field, //типы полей по дефолту
                                             'key_primary' => $key_primary, //id первичный ключ
+                                            'join_key' => $retw->table_join_key, //prumary key join таблиц
                                             'obj' => $get['obj'],
                                             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
@@ -525,7 +526,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
         //флаг для запуска колбеков только при срабатывании екшена
         $retw->render = true;
 
-        $name_count = Model::factory('All')->name_count($retw->table);
+        $name_count = Model::factory('All')->name_count($retw->table, $retw->join_table);
 
 
         if (isset($_POST['add'])) {
@@ -659,7 +660,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 //die(print_r($name_count_insert));
                 $insert_value = array_values($insert);
 
-                $result = Model::factory('All')->insert($retw->table, $name_count_insert, $insert_value);
+                $result = Model::factory('All')->insert($retw->table, $name_count_insert, $insert_value, $retw->join_table);
 
                 //делаем запись в указаную таблицу
                 if ($retw->set_one_to_many) {
@@ -672,7 +673,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 //переиницыализация
                 $retw->callback_after_insert($retw->callback_after_insert['name_function'], 'true');
 
-                $query_array_del = Model::factory('All')->select_all_where($retw->table, $result);
+                $query_array_del = Model::factory('All')->select_all_where($retw->table, $result, $retw->join_table);
                 call_user_func(array($re['callback_functions_array']['class'],
                     $retw->callback_after_insert['name_function']), $query_array_del[0]);
 
@@ -704,7 +705,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
 
         //типы полей на основе типов mysql
-        $information_shem = Model::factory('All')->information_table($retw->table);
+        $information_shem = Model::factory('All')->information_table($retw->table, null, $retw->join_table);
         $type_field = $retw->shows_type_input_default($information_shem);
 
         //полечаем значения для переопределения типов полей
@@ -749,6 +750,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             'select_muliselect' => $select_multiselect,
             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
             'type_field' => $type_field, //типы полей по дефолту
+            'join_key' => $retw->table_join_key, //prumary key join таблиц
             'name_colums_table_show' => $retw->new_name_column);
 
         $this->template->render = $viev_add;
