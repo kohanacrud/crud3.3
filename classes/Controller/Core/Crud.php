@@ -37,7 +37,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $retw->callback_before_delete($retw->callback_before_delete['name_function']);
             $retw->callback_after_delete($retw->callback_after_delete['name_function']);
 
-            $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id);
+            $query_array_del = Model::factory('All')->select_all_where($retw->table, $this->id, $retw->join_table);
             //получаем данные из таблиц
             $query_array_del = $query_array_del[0];
 
@@ -72,9 +72,9 @@ class Controller_Core_Crud extends Controller_Core_Main {
             }
 
             if ($this->del_arr == 1) {
-                $query =  Model::factory('All')->group_delete($retw->table, $this->id_del_array);
+                $query =  Model::factory('All')->group_delete($retw->table, $this->id_del_array, $retw->join_table);
             } else {
-                $query = Model::factory('All')->delete($retw->table, $this->id);
+                $query = Model::factory('All')->delete($retw->table, $this->id, $retw->join_table);
             }
         }
 

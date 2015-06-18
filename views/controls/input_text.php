@@ -79,7 +79,7 @@
             case 'datetime':
                 $date_types = 'glyphicon-th';
                 $data_class = 'form_datetime';
-                $data_format = 'dd MM yyyy - HH:ii p';
+                $data_format = 'yyyy-mm-dd hh:ii:ss';
             break;
 
             case 'time':
@@ -93,7 +93,7 @@
 
     ?>
 
-    <?if ($type_field != 'time' or $type_field != 'datetime' or $type_field != 'date') {?>
+    <?if ($type_field != 'time' AND $type_field != 'datetime' AND $type_field != 'date') {?>
         <input <?=$attr?> class="form-control"
                           type="<?=$type_field?>"
                           name="<?=$name_fied?>"

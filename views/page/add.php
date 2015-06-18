@@ -28,7 +28,7 @@
 
 
 </script>
-<pre><?print_r($add_property)?></pre>
+<!--<pre>--><?//print_r($add_property)?><!--</pre>-->
 
 <div class="container">
     <div class="row">

@@ -53,25 +53,56 @@ class Model_All extends Model
 
 
     //удаление по id
-    public function delete ($table, $id) {
+    public function delete ($table, $id, $join = null) {
 
         $key_primary = $this->information_table($table, true);
         $this->key_primary = $key_primary[0]->COLUMN_NAME;
 
-        return DB::delete($table)
-            ->where($this->key_primary, '=', $id)
-            ->execute();
+        if ($join !=null) {
+
+            $query = DB::delete($table)
+                ->where($this->key_primary, '=', $id)
+                ->execute();
+
+            foreach ($join as $joins) {
+                DB::delete($joins[1])
+                    ->where($joins[2], '=', $id)
+                    ->execute();
+            }
+
+            return $query;
+
+        } else {
+            return DB::delete($table)
+                ->where($this->key_primary, '=', $id)
+                ->execute();
+        }
+
     }
 
     //удаление груповое
-    public function group_delete ($table, $idArr) {
+    public function group_delete ($table, $idArr, $join = null) {
 
         $key_primary = $this->information_table($table, true);
         $this->key_primary = $key_primary[0]->COLUMN_NAME;
-        //array('john', 'jane')
-        return DB::delete($table)
-            ->where($this->key_primary, 'IN', $idArr)
-            ->execute();
+
+        if ($join != null) {
+
+            DB::delete($table)
+                ->where($this->key_primary, 'IN', $idArr)
+                ->execute();
+
+            foreach ($join as $joins) {
+                DB::delete($joins[1])
+                    ->where($joins[2], 'IN', $idArr)
+                    ->execute();
+            }
+
+        } else {
+            return DB::delete($table)
+                ->where($this->key_primary, 'IN', $idArr)
+                ->execute();
+        }
     }
 
     //ОБНОВЛЕНЕ
