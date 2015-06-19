@@ -11,20 +11,6 @@
         form_edit.attr('target','hiddenframe');
         form_edit.submit();
 
-//        var btn = $(this);
-//        btn.button('loading');
-//
-//        $.ajax({
-//            type: "GET",
-//            dataType: "html",
-//            url: "edit",
-//            data: $('#w-form-edit').serialize()
-////            success: function(response) {
-////
-////            }
-//        }).always(function () {
-//            btn.button('reset');
-//        });
         form_edit.removeAttr('target');
 
     });
@@ -34,7 +20,7 @@
 <!--<pre>--><?//die(print_r($edit_property))?><!--</pre>-->
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
 
             <form method="POST" enctype="multipart/form-data" id="w-form-edit" class="form-horizontal" role="form" >
 
