@@ -129,9 +129,7 @@ class Model_All extends Model
                             ->execute();
                     }
                 }
-
             }
-
         } else {
 
             DB::update($table)
@@ -182,7 +180,6 @@ class Model_All extends Model
     //ПОЛУЧАЕМ названия ПОЛЯ ТАБЛИИЦЫ
     public function name_count ($table, $join = null) {
 
-
         if ($join != null) {
 
             $name_table = DB::query(Database::SELECT,
@@ -195,7 +192,7 @@ class Model_All extends Model
             $result_mod = array();
 
             foreach ($join as $row_join) {
-
+                $result_mod = array();
                 $name_colums_table = DB::query(Database::SELECT,
                     'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
                 $name_colums_table->param(':tab', $row_join[1]);
@@ -219,7 +216,7 @@ class Model_All extends Model
             $name_colums_table->param(':tab', $table);
             $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
 
-            return $name_colums_table->execute()->as_array();
+            return $name_colums_table->cached()->execute()->as_array();
         }
     }
 
@@ -233,7 +230,7 @@ class Model_All extends Model
             $name_colums_table->param(':key_primary', $key_primary);
             $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
 
-            return $name_colums_table->as_object()->execute();
+            return $name_colums_table->cached()->as_object()->execute();
         } else {
 
             if ($join_table != null) {
@@ -269,12 +266,9 @@ class Model_All extends Model
     public function count_table ($table, $set_where = null) {
 
         if ($set_where != null) {
-
             $sele_where = 'WHERE '.$set_where['colum'].$set_where['operation'].$set_where['value'];
             $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table.' '.$sele_where);
-
         } else {
-
             $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
         }
 
@@ -283,49 +277,93 @@ class Model_All extends Model
 
 
     //типы полей таблицы
-    private function information_data_type ($table) {
+    private function information_data_type ($table, $join_table = null) {
 
+        if ($join_table != null) {
+            $join_arr = array();
 
-        $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
+            $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
                                                       FROM INFORMATION_SCHEMA.COLUMNS
                                                       WHERE table_name = :tab
                                                         AND TABLE_SCHEMA = :bas');
-        $data_type->param(':tab', $table);
-        $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
+            $data_type->param(':tab', $table);
+            $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
+            $result_table = array();
+            foreach ($data_type->cached()->execute()->as_array() as $row) {
+                $result_table[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+            }
 
-        foreach ($data_type->execute()->as_array() as $row) {
-            $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+
+            foreach ($join_table as $row_join) {
+                $result_mod = array();
+                $name_colums_table = DB::query(Database::SELECT,
+                                                        'SELECT COLUMN_NAME,DATA_TYPE
+                                                      FROM INFORMATION_SCHEMA.COLUMNS
+                                                      WHERE table_name = :tab
+                                                        AND TABLE_SCHEMA = :bas');
+                $name_colums_table->param(':tab', $row_join[1]);
+                $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
+                $result = $name_colums_table->cached()->execute()->as_array();
+
+                foreach ($result as $result_join) {
+                    $result_mod[$row_join[1].'@'.$result_join['COLUMN_NAME']] = $result_join['DATA_TYPE'];
+                }
+
+                $join_arr = array_merge($join_arr ,$result_mod);
+            }
+            return array_merge($result_table, $join_arr);
+        } else {
+
+            $data_type = DB::query(Database::SELECT, 'SELECT COLUMN_NAME,DATA_TYPE
+                                                      FROM INFORMATION_SCHEMA.COLUMNS
+                                                      WHERE table_name = :tab
+                                                        AND TABLE_SCHEMA = :bas');
+            $data_type->param(':tab', $table);
+            $data_type->param(':bas', Kohana::$config->load('crudconfig.database'));
+
+            foreach ($data_type->cached()->execute()->as_array() as $row) {
+                $result[$row['COLUMN_NAME']] = $row['DATA_TYPE'];
+            }
+
+            return $result;
         }
 
-        return $result;
     }
 
 
+
+    private function str_join_replace ($column) {
+            return str_replace("@", ".", $column);
+    }
+
+
+
     //пагинация
-    public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like, $set_where = null) {
+    public function paginationAjax ($limit, $ofset = null, $table, $order_column, $order_by, $like = null, $column_like, $set_where = null, $join = null) {
 
-
-       // die('sdfsdf');
         if ($ofset == '' or $ofset == null) {
             $ofset = 0;
         }
 
+        //die(print_r($order_column));
+
         if ($like != '' and $like !== null) {
+
             $i=0;
             $Sql ='';
 
-           // if ($like == "'") {
-                $like = str_replace ("'", "\'", $like);
-                //$like = "\'";
-           // }
+            $like = str_replace ("'", "\'", $like);
 
             //получаем поля и тыпы к ним
-            $name_type_column = $this->information_data_type($table);
+            $name_type_column = $this->information_data_type($table, $join);
+
+            //die(print_r($name_type_column));
 
 
-                //die(print_r($name_type_column));
+
 
             foreach ($column_like as $key => $column) {
+
                 $i++;
                 if ($i >= 1) {
                     $or = ' OR ';
@@ -334,22 +372,30 @@ class Model_All extends Model
                 }
 
                 if (count($column_like) == $i) {
-                   $or = '';
+                    $or = '';
                 }
 
                 if (mb_detect_encoding($like) != 'ASCII') {
+                    if ($name_type_column[$column] != 'date' AND $name_type_column[$column] != 'time') {
 
-                    if ($name_type_column[$column] != 'date') {
+                        if ($join != null) {
+                            $column = $this->str_join_replace($column);
+                        }
 
-                        $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
+                        $Sql .= $column . ' LIKE ' . "'%" . $like . "%'" . $or;
+
                     }
-
                 } else {
 
-                    $Sql .= $column.' LIKE '. "'%".$like."%'" .$or ;
-                }
+                    if ($join != null) {
+                        $column = $this->str_join_replace($column);
+                    }
 
+                    $Sql .= $column . ' LIKE ' . "'%" . $like . "%'" . $or;
+                }
             }
+
+
 
             if ($set_where != null) {
                 $likeSql = ' AND ('.$Sql.') ';
@@ -369,19 +415,45 @@ class Model_All extends Model
         }
 
 
-        $query_count =  DB::query(Database::SELECT,
-            'SELECT * FROM ' .$table.' '.$sele_where.' '.$likeSql)
-            ->execute()
-            ->as_array();
+        //если есть обеденненые таблицы
+        if ($join != null) {
 
-        $query = DB::query(Database::SELECT,
-            'SELECT * FROM '.$table.' '.$sele_where.' '.$likeSql.' '.
-            'ORDER BY '. $order_column.' '.$order_by.'
+            $joins_string = $this->create_joint_query($table, $join, $column_like);
+
+            //количество найденых в таблице
+            $query_count =  DB::query(Database::SELECT,
+                'SELECT COUNT(*) as cou FROM ' .$table.' '.$joins_string['q'].' '.$sele_where.' '.$likeSql)
+                ->execute()
+                ->as_array();
+
+            $order_column = $this->str_join_replace($order_column);
+
+            $query = DB::query(Database::SELECT,
+                'SELECT '.$joins_string['asCoun'].' FROM '.$table.' '.$joins_string['q'].' '.$sele_where.' '.$likeSql.' '.
+                'ORDER BY '. $order_column.' '.$order_by.'
             LIMIT '.$ofset.','.$limit)
-            ->execute()
-            ->as_array();
+                ->cached()
+                ->execute()
+                ->as_array();
 
-        return array('query' => $query, 'count' => count($query_count));
+        } else {
+
+            //количество найденых в таблице
+            $query_count =  DB::query(Database::SELECT,
+                'SELECT COUNT(*) as cou FROM ' .$table.' '.$sele_where.' '.$likeSql)
+                ->execute()
+                ->as_array();
+
+            $query = DB::query(Database::SELECT,
+                'SELECT * FROM '.$table.' '.$sele_where.' '.$likeSql.' '.
+                'ORDER BY '. $order_column.' '.$order_by.'
+            LIMIT '.$ofset.','.$limit)
+                ->cached()
+                ->execute()
+                ->as_array();
+        }
+
+        return array('query' => $query, 'count' => $query_count[0]['cou']);
     }
 
     private function get_pars_string ($field) {
@@ -400,11 +472,37 @@ class Model_All extends Model
         }
     }
 
+    /**
+     * @param $table
+     * @param $join
+     * @param $column
+     * @return array
+     * формирование строки запроса для обеденных таблиц
+     */
+    private function create_joint_query ($table, $join, $column) {
+
+        $array_counts = Cruds::parse_name_column(array_flip($column));
+        $str = '';
+        $str_as = '';
+        foreach ($join as $joins) {
+            $str .= ' INNER JOIN '.$joins[1].' ON '.$table.'.'.$joins[0].'='.$joins[1].'.'.$joins[2].' ';
+        }
+
+        $str_as = implode(', ', array_flip($array_counts['table']));
+        foreach ($array_counts['join'] as $name_table => $row_join) {
+
+            foreach ($row_join as $name_column => $row_coun) {
+                $str_as .= ', '.$name_column.' AS '.'`'.$name_table.'@'.$name_column.'`'.' ';
+            }
+
+        }
+
+        return array('q' => $str, 'asCoun' =>  $str_as);
+    }
 
 
     //получение данных из другой таблицы
     public function get_table_relativ ($Table, $field, $field_value, $wheres_arr = null, $oder_by = null) {
-
 
         $this->get_pars_string($field);
 
@@ -412,6 +510,7 @@ class Model_All extends Model
 
             $query = DB::select()
                 ->from($Table)
+                ->cached()
                 ->execute()
                 ->as_array();
         } else {
@@ -422,12 +521,12 @@ class Model_All extends Model
 
             $query = DB::select()
                 ->from($Table)
+                ->cached()
                 ->where($wheres_arr[0], $wheres_arr[1], $wheres_arr[2])
                 ->execute()
                 ->as_array();
 
         }
-
 
         if (!empty($query)) {
             //проверяем если масив
@@ -514,8 +613,6 @@ class Model_All extends Model
                     }
                 }
             }
-
-
 
             $result = array();
         }

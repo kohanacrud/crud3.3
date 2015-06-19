@@ -44,13 +44,11 @@ class Controller_Core_Crud extends Controller_Core_Main {
             if ($retw->set_one_to_many) {
                 $query_array_del = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_del, $this->id, false);
             }
-            //die(print_r($query_array_del));
         }
 
 
         //если хук определен возврящаем данные удаления
         if ($retw->callback_before_delete != null) {
-            //die(print_r($re['callback_functions_array']['function']));
             //переиницыализация статического метода обработчика
             $callbackStatic = call_user_func(array($re['callback_functions_array']['class'],
                 $retw->callback_before_delete['name_function']), $query_array_del);
@@ -63,10 +61,8 @@ class Controller_Core_Crud extends Controller_Core_Main {
         }
 
 
-
         if (!isset($callbackStatic) or $callbackStatic !== false) {
             //удаляем
-
             if ($retw->set_one_to_many) {
                 $fields = Model::factory('All')->delete_other_table($retw->set_one_to_many, $this->id);
             }
@@ -96,7 +92,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
         );
 
     }
-
 
     private function file_force_download($file) {
 
@@ -133,7 +128,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $re = unserialize(base64_decode($get['obj']));
         }
 
-
         $retw = call_user_func(array($re['callback_functions_array']['class'],
             $re['callback_functions_array']['function']));
 
@@ -155,9 +149,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
         if (isset($_POST['edit'])) {
 
             $this->id = Arr::get($_POST, $key_primary);
-
             $name_count = Model::factory('All')->name_count($retw->table, $retw->join_table);
-          // die (print_r($_POST));
             //перебори формирования массива для передачи в модель для обновления записей
             //ищем в масиве $_GET поля которые вернула модель name_count
             foreach ($name_count as $name_count_rows) {
@@ -186,7 +178,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
                     //если поле определено как file
                     if (!empty($retw->type_field_upload)) {
-                        //die(print_r($retw->type_field_upload));
+
                         //получаем масив с типом поля и путь к дирикктории хранения файла
                         $dir_path = $retw->type_field_upload[$name_count_rows['COLUMN_NAME']];
 
@@ -252,7 +244,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
                             {
                                 //относительный путь к файлу запись в базу
                                 $update[$name_count_rows['COLUMN_NAME']] = $file_path['relative'].$name_file;
-                                // set file type
 
                             }
                        }
@@ -290,11 +281,9 @@ class Controller_Core_Crud extends Controller_Core_Main {
                     if ($retw->set_one_to_many) {
                         //делаем копию массива
                         $other_update = $update;
-
                         $update = $this->clear_field_insert($retw->set_one_to_many, $update);
 
                         Model::factory('All')->update_other_table($retw->set_one_to_many, $other_update, $_POST[$key_primary]);
-
                     }
 
                     $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary], $key_primary, $retw->join_table);
@@ -305,13 +294,10 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 if ($retw->set_one_to_many) {
                     //делаем копию массива
                     $other_update = $update;
-
                     $update = $this->clear_field_insert($retw->set_one_to_many, $update);
 
                     Model::factory('All')->update_other_table($retw->set_one_to_many, $other_update, $_POST[$key_primary]);
-
                 }
-
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary], $key_primary,  $retw->join_table);
             }
 
@@ -329,7 +315,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         $fields = Model::factory('All')->select_all_where($retw->table,$this->id, $retw->join_table);
         $fields = $fields[0];
-        //die(print_r($fields));
 
         //если обявлен метод один ко многим то данные для поля берем с другой таблицы
         if ($retw->set_one_to_many) {
@@ -348,10 +333,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         //типы полей на основе типов mysql
         $information_shem = Model::factory('All')->information_table($retw->table, null, $retw->join_table);
-        //die(print_r($information_shem));
         $type_field = $retw->shows_type_input_default($information_shem);
-
-       // die(print_r($type_field));
 
         //полечаем значения для переопределения типов полей
         if (!empty($retw->set_field_type)) {
@@ -398,8 +380,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
                                             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $viev_edit;
-
-
         $crud_style = $retw->static_style();
 
         $this->template->scripts = $crud_style['scripts'];
@@ -426,8 +406,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         $this->id = Arr::get($_POST, 'id');
         $retw->render = true;
-
-        //die(print_r($retw->add_action));
 
         if ($retw->add_action != null) {
 
@@ -461,12 +439,10 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         $key_primary = Model::factory('All')->information_table($retw->table, true);
         $key_primary = $key_primary[0]->COLUMN_NAME;
-
         $this->id = Arr::get($_GET, 'id');
 
         //вид edit
         $show_views = View::factory('page/show_views');
-
 
         $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
         $fields = $fields[0];
@@ -493,8 +469,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $show_views;
-
-
         $crud_style = $retw->static_style();
 
         $this->template->scripts = $crud_style['scripts'];
@@ -511,7 +485,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
 
         if (isset($_POST['add'])) {
-            //die(print_r($_FILES));
             $re = unserialize(base64_decode($_POST['obj']));
         } else {
             $re = unserialize(base64_decode($_GET['obj']));
@@ -530,7 +503,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
 
         if (isset($_POST['add'])) {
-            //die(print_r($_GET));
+
             foreach ($name_count as $name_count_rows) {
 
                 //если это масив то сериализуем для multiple полей
@@ -589,7 +562,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
                                 }
                             }
 
-                            //die(print_r($file_update));
                             if ($retw->set_one_to_many) {
                                 $insert[$name_count_rows['COLUMN_NAME']] = $file_update;
                             } else {
@@ -678,11 +650,8 @@ class Controller_Core_Crud extends Controller_Core_Main {
                     $retw->callback_after_insert['name_function']), $query_array_del[0]);
 
             }
-
             Controller::redirect($_POST['curent_uri']);
-
         }
-
 
         //получаем первичный ключ
         $key_primary = Model::factory('All')->information_table($retw->table, true);
@@ -694,7 +663,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
             if ($name_count_rows['COLUMN_NAME'] != $key_primary) {
                 $fields[] = $name_count_rows['COLUMN_NAME'];
             }
-
         }
 
         //если определены поля которые должны отображатся при добавлении
@@ -714,7 +682,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
             //переопределяем масив $retw->set_field_type если передан параметр  $relation_one
             $retw->reload_field_type($retw->set_field_type);
             $new_type_field = $retw->set_field_type;
-
 
         } else {
             $new_type_field = null;
@@ -754,7 +721,6 @@ class Controller_Core_Crud extends Controller_Core_Main {
             'name_colums_table_show' => $retw->new_name_column);
 
         $this->template->render = $viev_add;
-
         $crud_style = $retw->static_style();
 
         $this->template->scripts = $crud_style['scripts'];
