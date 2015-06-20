@@ -325,7 +325,10 @@ class Controller_Core_Crud extends Controller_Core_Main {
         //какие будут отображатся при редактировании
         if ($retw->edit_fields != null) {
             //вычисляяем пересечение масивов по ключам
-            $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
+            $flip = array_flip($retw->edit_fields);
+            $field =  array_intersect_key($fields, $flip);
+            $field = array_merge($flip,$field);
+
             $field[$key_primary] = $fields[$key_primary];
         } else {
             $field = $fields;
