@@ -297,115 +297,119 @@
 </script>
 
 <!--add-->
+<div class="row">
+    <div class="col-md-12">
+        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
 
-<?if ($table_propery['activ_operation']['enable_delete_group']):?>
+            <div class="modal fade" id="myModal-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
+                        </div>
+                        <div class="modal-body">
+                            <?=__('LANG_MODAL_DELETE_MSG')?>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" class="serialise-form" value="">
+                            <button type="button" class="delete-query w-del-array btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="modal fade" id="myModal-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
-                </div>
-                <div class="modal-body">
-                    <?=__('LANG_MODAL_DELETE_MSG')?>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" class="serialise-form" value="">
-                    <button type="button" class="delete-query w-del-array btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
+        <?endif?>
+
+
+
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <?=__('LANG_MODAL_DELETE_MSG')?>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" class="serialise-form" value="">
+                        <button type="button" class="delete-query delete btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-<?endif?>
 
 
+        <input type="hidden" class="w-number-page" value="0"/>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel"><?=__('LANG_MODAL_DELETE_TITLE')?></h4>
+        <?if ($table_propery['activ_operation']['add'] != true ):?>
+
+            <div class="w-buton-befor-table">
+                <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/add" method="get">
+                    <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+                    <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> <?=__('LAND_ADD')?></button>
+                </form>
             </div>
-            <div class="modal-body">
-                <?=__('LANG_MODAL_DELETE_MSG')?>
+
+        <?endif?>
+
+
+        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
+
+            <div class="w-buton-befor-table">
+                    <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
+                    <input type="hidden" name="del_arr" value="1">
+                    <button type="submit" disabled class="delete btn btn-danger btn-sm w-del-array"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
             </div>
-            <div class="modal-footer">
-                <input type="hidden" class="serialise-form" value="">
-                <button type="button" class="delete-query delete btn btn-primary"><?=__('LANG_MODAL_BUTON_DELETE')?></button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('LANG_MODAL_BUTON_CENSEL')?></button>
-            </div>
-        </div>
+
+        <?endif?>
+
+
+        <table id="example" class="display">
+            <thead>
+
+            <tr>
+                <?if ($table_propery['activ_operation']['enable_delete_group']):?>
+                    <th><input type="checkbox" class="w-chec-table-all-top"></th>
+                <?endif?>
+
+                <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
+                    <th>
+                        <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME']: ''?>
+                    </th>
+                <?endforeach?>
+
+                <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
+                    <th></th>
+                <?endif?>
+            </tr>
+            </thead>
+
+            <tfoot>
+            <tr>
+                <?if ($table_propery['activ_operation']['enable_delete_group']):?>
+                    <th>#</th>
+                <?endif?>
+
+                <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
+                <th>
+                    <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME'] : ''?>
+                </th>
+                <?endforeach?>
+
+                <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
+                    <th></th>
+                <?endif?>
+
+            </tr>
+            </tfoot>
+        </table>
+
     </div>
 </div>
-
-
-<input type="hidden" class="w-number-page" value="0"/>
-
-
-<?if ($table_propery['activ_operation']['add'] != true ):?>
-
-    <div class="w-buton-befor-table">
-        <form action="/<?=Kohana::$config->load('crudconfig.base_url')?>/add" method="get">
-            <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-            <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus-sign"></span> <?=__('LAND_ADD')?></button>
-        </form>
-    </div>
-
-<?endif?>
-
-
-<?if ($table_propery['activ_operation']['enable_delete_group']):?>
-
-    <div class="w-buton-befor-table">
-            <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
-            <input type="hidden" name="del_arr" value="1">
-            <button type="submit" disabled class="delete btn btn-danger btn-sm w-del-array"><span class="glyphicon glyphicon-remove-circle"></span> <?=__('LANG_DELETE')?></button>
-    </div>
-
-<?endif?>
-
-
-<table id="example" class="display">
-    <thead>
-
-    <tr>
-        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
-            <th><input type="checkbox" class="w-chec-table-all-top"></th>
-        <?endif?>
-
-        <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
-            <th>
-                <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME']: ''?>
-            </th>
-        <?endforeach?>
-
-        <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
-            <th></th>
-        <?endif?>
-    </tr>
-    </thead>
-
-    <tfoot>
-    <tr>
-        <?if ($table_propery['activ_operation']['enable_delete_group']):?>
-            <th>#</th>
-        <?endif?>
-
-        <?foreach ($table_propery['name_colums_table_show'] as $rows_column):?>
-        <th>
-            <?=isset($rows_column['COLUMN_NAME']) ? $rows_column['COLUMN_NAME'] : ''?>
-        </th>
-        <?endforeach?>
-
-        <?if ($table_propery['activ_operation']['edit']!= true or $table_propery['add_action_url_icon'] != '' or $table_propery['activ_operation']['delete'] != true):?>
-            <th></th>
-        <?endif?>
-
-    </tr>
-    </tfoot>
-</table>

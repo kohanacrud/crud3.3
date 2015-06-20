@@ -120,9 +120,6 @@ class Cruds extends Controller_Core_Main {
 
     public function edit_render ($id) {
 
-        $key_primary = Model::factory('All')->information_table($this->table, true);
-        $this->key_primary = $key_primary[0]->COLUMN_NAME;
-
         $this->object_serial = array('table' => $this->table,
             'callback_functions_array' => $this->class_metod
         );
@@ -130,7 +127,7 @@ class Cruds extends Controller_Core_Main {
         $obj = base64_encode(serialize($this->object_serial));
 
         $this->curent_uri = $_SERVER['REQUEST_URI'];
-        return Request::factory('core_crud/edit?obj='.$obj.'&'.$this->key_primary.'='.$id)->execute()->body();
+        return Request::factory('core_crud/edit?obj='.$obj.'&id='.$id)->execute()->body();
     }
 
     //метод рендера круда

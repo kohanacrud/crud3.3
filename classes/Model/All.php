@@ -112,7 +112,7 @@ class Model_All extends Model
         if ($join != null) {
 
             $array_update = Cruds::parse_name_column($field);
-
+            //die(print_r($array_update));
             DB::update($table)
                 ->set($array_update['table'])
                 ->where($key_primary, '=', $id)

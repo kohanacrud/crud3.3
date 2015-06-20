@@ -137,7 +137,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
         //получаем первичный ключ
         $key_primary = Model::factory('All')->information_table($retw->table, true);
         $key_primary = $key_primary[0]->COLUMN_NAME;
-
+        //die(print_r($key_primary));
         if (isset($_POST['edit'])) {
             $this->id = Arr::get($_POST, 'id');
         } else {
@@ -152,6 +152,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $name_count = Model::factory('All')->name_count($retw->table, $retw->join_table);
             //перебори формирования массива для передачи в модель для обновления записей
             //ищем в масиве $_GET поля которые вернула модель name_count
+            //die(print_r($name_count));
             foreach ($name_count as $name_count_rows) {
 
                 if (isset($_POST[$name_count_rows['COLUMN_NAME']])) {
@@ -294,6 +295,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 }
             } else {
 
+                   // die(print_r($update));
                 //если обявлен метод 1-n
                 if ($retw->set_one_to_many) {
                     //делаем копию массива
@@ -342,10 +344,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $fields = Model::factory('All')->get_other_table($retw->set_one_to_many, $fields, $this->id);
         }
 
-
-        //какие будут отображатся при редактировании
-        if ($retw->edit_fields != null) {
-
+        if ($retw->join_table != null) {
             //получаем значение pri_key
             foreach ($retw->table_join_key as $name => $page_key) {
                 if (!empty($fields[$name])) {
@@ -353,6 +352,12 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 }
 
             }
+        }
+
+
+        //какие будут отображатся при редактировании
+        if ($retw->edit_fields != null) {
+
             //вычисляяем пересечение масивов по ключам
             $flip = array_flip($retw->edit_fields);
             $field =  array_intersect_key($fields, $flip);
