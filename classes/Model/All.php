@@ -434,7 +434,6 @@ class Model_All extends Model
                 'SELECT '.$joins_string['asCoun'].' FROM '.$table.' '.$joins_string['q'].' '.$sele_where.' '.$likeSql.' '.
                 'ORDER BY '. $order_column.' '.$order_by.'
             LIMIT '.$ofset.','.$limit)
-                ->cached()
                 ->execute()
                 ->as_array();
 

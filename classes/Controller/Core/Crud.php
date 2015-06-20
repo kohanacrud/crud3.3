@@ -255,6 +255,10 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
             }
 
+            if ($retw->callback_after_edit != null) {
+                //получаем масив строку таблицы которая должна быть редактирована
+                $query_array_edit_after = Model::factory('All')->select_all_where($retw->table, $this->id, $retw->join_table);
+            }
 
             //если хук определен
             if ($retw->callback_before_edit !== null){
@@ -300,6 +304,23 @@ class Controller_Core_Crud extends Controller_Core_Main {
                 }
                 $query = Model::factory('All')->update($retw->table, $update,  $_POST[$key_primary], $key_primary,  $retw->join_table);
             }
+
+
+
+            if ($retw->callback_after_edit != null) {
+
+                $retw->callback_after_edit($retw->callback_after_edit['name_function']);
+
+                //получаем данные из других таблиц для хука
+                if ($retw->set_one_to_many) {
+                    $query_array_edit = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_edit_after[0], $this->id, false);
+                }
+
+                $callbackStatic = call_user_func_array(array($re['callback_functions_array']['class'],
+                    $retw->callback_after_edit['name_function']), array($update, $query_array_edit_after));
+
+            }
+
 
             Controller::redirect($_POST['curent_uri']);
         }

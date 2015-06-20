@@ -43,6 +43,7 @@ class Cruds extends Controller_Core_Main {
     public $callback_before_delete = null; //перед удалением
     public $callback_after_delete = null; //после удаления
     public $callback_before_edit = null; //перед обновлением
+    public $callback_after_edit = null; //после обновления
     public $callback_before_insert = null; //перед добавлением
     public $callback_after_insert = null; //после добавления
     public $set_one_to_many = null; //один ко многим
@@ -513,6 +514,11 @@ class Cruds extends Controller_Core_Main {
     public function callback_before_edit ($name_function) {
             $this->callback_before_edit = array('name_function' => $name_function);
     }
+
+    public function callback_after_edit ($name_function) {
+        $this->callback_after_edit = array('name_function' => $name_function);
+    }
+
 
     //добавить екшен
     public function add_action ($name_function, $name_action, $url, $icon = null) {
