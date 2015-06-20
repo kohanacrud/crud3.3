@@ -151,16 +151,18 @@ class Model_All extends Model
                 ->values(array_values($array_insert['table']))
                 ->execute();
 
-            foreach ($array_insert['join'] as $name_table => $row_join) {
 
+            foreach ($array_insert['join'] as $name_table => $row_join) {
+                $row_joins = array();
                 foreach ($join as $joines) {
-                    if (isset($row_join[$joines[2]])) {
-                        $row_join[$joines[2]] = $query[0];
+                    if ($name_table == $joines[1]) {
+                        $row_joins = $row_join;
+                        $row_joins[$joines[2]] = $query[0];
                     }
                 }
 
-                $query_j = DB::insert($name_table, array_keys($row_join))
-                    ->values(array_values($row_join))
+                $query_j = DB::insert($name_table, array_keys($row_joins))
+                    ->values(array_values($row_joins))
                     ->execute();
             }
 

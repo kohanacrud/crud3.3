@@ -197,6 +197,13 @@
 
                         <?//id в скрытом поле?>
                         <input type="hidden"  name="<?=$name_fied?>" value="<?=$value_fild?>">
+                        <?if (!empty($edit_property['join_key'])):?>
+
+                            <? foreach ($edit_property['join_key'] as $name_key => $join_key_val): ?>
+                                <input type="hidden"  name="<?=$name_key?>" value="<?=$join_key_val?>">
+                            <?endforeach?>
+
+                        <?endif?>
 
 
                     <?endif?>
