@@ -46,6 +46,10 @@ class Cruds extends Controller_Core_Main {
     public $callback_after_edit = null; //после обновления
     public $callback_before_insert = null; //перед добавлением
     public $callback_after_insert = null; //после добавления
+
+    public $callback_befor_show_edit = null; //перед открытием редактирования
+    public $callback_befor_show_add = null; //перед открытием добавления
+
     public $set_one_to_many = null; //один ко многим
     public $set_many_to_many = null; //многие ко многим
     public $select_multiselect = null; //изменяет поле select
@@ -599,6 +603,15 @@ class Cruds extends Controller_Core_Main {
 
     public function callback_after_insert ($name_function) {
         $this->callback_after_insert = array('name_function' => $name_function);
+    }
+
+
+    public function callback_befor_show_edit ($name_function){
+        $this->callback_befor_show_edit = array('name_function' => $name_function);
+    }
+
+    public function callback_befor_show_add ($name_function){
+        $this->callback_befor_show_add = array('name_function' => $name_function);
     }
 
     //отображение полей при добавлении

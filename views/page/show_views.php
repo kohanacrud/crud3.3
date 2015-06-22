@@ -46,7 +46,7 @@
 
     <nav>
         <ul class="pager">
-            <li class="previous"><a href="/<?=Kohana::$config->load('crudconfig.base_url')?>/"><span aria-hidden="true">&larr;</span> <?=__('LANG_PREVIOUS')?></a></li>
+            <li class="previous"><a href="<?=$show_views_property['curent_uri']?>"><span aria-hidden="true">&larr;</span> <?=__('LANG_PREVIOUS')?></a></li>
 
         </ul>
     </nav>

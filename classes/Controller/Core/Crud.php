@@ -327,6 +327,8 @@ class Controller_Core_Crud extends Controller_Core_Main {
             Controller::redirect($_POST['curent_uri']);
         }
 
+
+
         //вид edit
         $viev_edit = View::factory('page/edit');
 
@@ -404,6 +406,19 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $select_multiselect = null;
         }
 
+        //хук перед открытием
+        if ($retw->callback_befor_show_edit != null) {
+            $retw->callback_befor_show_edit($retw->callback_befor_show_edit['name_function']);
+
+            $callbackStatic_bef_edit = call_user_func_array(array($re['callback_functions_array']['class'],
+                $retw->callback_befor_show_edit['name_function']), array($fields, $field));
+
+            if (!empty($callbackStatic_bef_edit)) {
+                $field = $callbackStatic_bef_edit;
+            }
+        }
+
+
         $viev_edit->curent_uri = $retw->curent_uri;
         $viev_edit->edit_property = array('field' => $field,
                                             'select_muliselect' => $select_multiselect,
@@ -446,7 +461,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         if ($retw->add_action != null) {
 
-            $query_array_del = Model::factory('All')->select_all_where($retw->table,$this->id);
+            $query_array_del = Model::factory('All')->select_all_where($retw->table,$this->id, $retw->join_table);
 
             if ($retw->set_one_to_many) {
                 $query_array_del = Model::factory('All')->get_other_table($retw->set_one_to_many, $query_array_del[0], $this->id, false);
@@ -481,7 +496,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
         //вид edit
         $show_views = View::factory('page/show_views');
 
-        $fields = Model::factory('All')->select_all_where($retw->table,$this->id);
+        $fields = Model::factory('All')->select_all_where($retw->table,$this->id, $retw->join_table);
         $fields = $fields[0];
 
         //если обявлен метод один ко многим то данные для поля берем с другой таблицы
@@ -489,20 +504,36 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $fields = Model::factory('All')->get_other_table($retw->set_one_to_many, $fields, $this->id);
         }
 
+        if ($retw->join_table != null) {
+            //получаем значение pri_key
+            foreach ($retw->table_join_key as $name => $page_key) {
+                if (!empty($fields[$name])) {
+                    $retw->table_join_key[$name] = $fields[$name];
+                }
+
+            }
+        }
+
 
         //какие будут отображатся при редактировании
         if ($retw->edit_fields != null) {
             //вычисляяем пересечение масивов по ключам
-            $field =  array_intersect_key($fields, array_flip($retw->edit_fields));
+            $flip = array_flip($retw->edit_fields);
+            $field =  array_intersect_key($fields, $flip);
+            $field = array_merge($flip,$field);
+
+            //$field =  array_intersect_key($fields, array_flip($retw->edit_fields));
             $field[$key_primary] = $fields[$key_primary];
         } else {
             $field = $fields;
         }
 
+
         $show_views->show_views_property = array(
             'field' => $field,
             'key_primary' => $key_primary, //id первичный ключ
             'obj' => $_GET['obj'],
+            'curent_uri' => $retw->curent_uri,
             'name_colums_table_show' => $retw->new_name_column); //передаем названия полей новые
 
         $this->template->render = $show_views;
@@ -746,6 +777,17 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $retw->validation_views();
             $viev_add->script_validate = $retw->validation;
         }
+
+
+        //хук перед открытием
+        if ($retw->callback_befor_show_add != null) {
+            $retw->callback_befor_show_edit($retw->callback_befor_show_add['name_function']);
+
+            $callbackStatic_bef_add = call_user_func_array(array($re['callback_functions_array']['class'],
+                $retw->callback_befor_show_add['name_function']), array($fields));
+
+        }
+
 
         $viev_add->curent_uri = $retw->curent_uri;
         $viev_add->add_property = array('field' => $fields,
