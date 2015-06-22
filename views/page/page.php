@@ -299,6 +299,7 @@
 <!--add-->
 <div class="row">
     <div class="col-md-12">
+        <input type="hidden" name="obj" value="<?=$table_propery['obj_serial']?>"/>
         <?if ($table_propery['activ_operation']['enable_delete_group']):?>
 
             <div class="modal fade" id="myModal-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
