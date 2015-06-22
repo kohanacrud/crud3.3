@@ -544,7 +544,7 @@ class Cruds extends Controller_Core_Main {
             'date' => 'date',
             'int' => 'number',
             'bigint' => 'number',
-            'tinyint' => 'checkbox',
+            'tinyint' => 'number',
             'smallint' => 'number',
             'mediumint' => 'number',
             'float' => 'number',
