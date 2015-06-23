@@ -89,6 +89,7 @@
                                         }
 
                                         $data = array(
+                                            'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                             'name_fied' => $name_fied,
                                             'disable_editor_class' => $editor_class,
                                             'attr' => $attr
@@ -159,6 +160,7 @@
                                     } elseif ($add_property['type_field'][$name_fied] == 'file') {
 
                                         $data = array(
+                                            'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                             'name_fied' => $name_fied,
                                             'multiple' => $multiple,
                                             'type_field_upload' => $type_field_upload
@@ -169,6 +171,7 @@
                                     } else {
 
                                         $data = array(
+                                            'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                             'type_field' => $add_property['type_field'][$name_fied],
                                             'multiple' => $multiple,
                                             'name_fied' => $name_fied,
@@ -181,10 +184,6 @@
 
                             <?endif?>
 
-
-
-
-<!--                            <input type="text" class="form-control" id="--><?//=$name_fild?><!--" name="--><?//=$name_fild?><!--" value=""/>-->
                         </div>
 
                     </div>
