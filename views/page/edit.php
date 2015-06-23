@@ -85,6 +85,7 @@
                                             }
 
                                             $data = array(
+                                                'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                                 'value_fild' => $value_fild,
                                                 'name_fied' => $name_fied,
                                                 'disable_editor_class' => $editor_class,
@@ -162,7 +163,7 @@
                                         } elseif ($edit_property['type_field'][$name_fied] == 'file') {
 
                                             $data = array(
-                                                //'origin_value_fild' => $origin_value_fild,
+                                                'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                                 'value_fild' => $value_fild,
                                                 'name_fied' => $name_fied,
                                                 'multiple' => $multiple,
@@ -174,7 +175,7 @@
                                         } else {
 
                                             $data = array(
-                                                //'origin_value_fild' => $origin_value_fild,
+                                                'title' => !empty($edit_property['toptip'][$name_fied]) ? $edit_property['toptip'][$name_fied] : '',
                                                 'type_field' => $edit_property['type_field'][$name_fied],
                                                 'value_fild' => $value_fild,
                                                 'multiple' => $multiple,

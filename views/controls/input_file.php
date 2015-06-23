@@ -90,7 +90,9 @@
 
     <div class="w-input-form">
         <div class="entry input-group">
-            <input type="file"  name="<?=$name_fied?>"/>
+            <input type="file"  name="<?=$name_fied?>" data-toggle="tooltip"
+                   data-placement="bottom"
+                   title="<?=$title?>"/>
             <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
             <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
         </div>

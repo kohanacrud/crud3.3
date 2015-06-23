@@ -421,6 +421,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         $viev_edit->curent_uri = $retw->curent_uri;
         $viev_edit->edit_property = array('field' => $field,
+                                            'toptip' => $retw->toptip_fields,
                                             'select_muliselect' => $select_multiselect,
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных
@@ -791,6 +792,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         $viev_add->curent_uri = $retw->curent_uri;
         $viev_add->add_property = array('field' => $fields,
+            'toptip' => $retw->toptip_fields,
             'obj' => $_GET['obj'],
             'disable_editor' => $disable_editor, //отключение редактора
             'select_muliselect' => $select_multiselect,

@@ -39,6 +39,9 @@ class Cruds extends Controller_Core_Main {
     public $name_colums_ajax; //название полей для аякса
     public $relation_one; //получить содержимое другой таблицы
     private $tmp_name_column_file; //временно для rows
+
+    public $toptip_fields = null; //подсказки для полей
+
     //хуки
     public $callback_before_delete = null; //перед удалением
     public $callback_after_delete = null; //после удаления
@@ -767,6 +770,14 @@ class Cruds extends Controller_Core_Main {
             }
         }
         return $data;
+    }
+
+    /**
+     * @param $arr
+     * подсказки для полей
+     */
+    public function toptip_fields ($arr){
+        $this->toptip_fields = $arr;
     }
 
 }

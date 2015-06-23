@@ -24,7 +24,9 @@
 
                 <?foreach ($arr_value as $row):?>
                     <div class="entry input-group">
-                        <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" value="<?=$row?>">
+                        <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" data-toggle="tooltip"
+                               data-placement="bottom"
+                               title="<?=isset($title) ? $title : ''?>" value="<?=$row?>">
                         <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
                         <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
@@ -36,7 +38,9 @@
             <?else://если в базе не сериализованый обьект а подключили multiple?>
 
                 <div class="entry input-group">
-                    <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" value="<?=$arr_value?>">
+                    <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" data-toggle="tooltip"
+                           data-placement="bottom"
+                           title="<?=isset($title) ? $title : ''?>" value="<?=$arr_value?>">
                     <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
                     <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
@@ -49,6 +53,9 @@
 
         <div class="entry input-group">
             <input <?=$attr?> class="form-control"
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="<?=isset($title) ? $title : ''?>"
                               type="<?=$type_field?>"
                               name="<?=$name_fied?>[]"
                               value=""/>
@@ -95,6 +102,9 @@
 
     <?if ($type_field != 'time' AND $type_field != 'datetime' AND $type_field != 'date') {?>
         <input <?=$attr?> class="form-control"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="<?=isset($title) ? $title : ''?>"
                           type="<?=$type_field?>"
                           name="<?=$name_fied?>"
                           value="<?if (!empty($value_fild)) echo $value_fild?>"
@@ -106,6 +116,9 @@
         <div class="input-group date col-md-5 <?=$data_class?>" data-date="" data-date-format="<?=$data_format?>" data-link-field="<?=$name_fied?>" data-link-format="<?=$data_format?>">
             <input <?=$attr?> class="form-control"
                               type="text"
+                              data-toggle="tooltip"
+                              title="<?=isset($title) ? $title : ''?>"
+                              data-placement="bottom"
                               readonly
                               name="<?=$name_fied?>"
                               value="<?if (!empty($value_fild)) echo $value_fild?>"

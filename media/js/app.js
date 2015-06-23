@@ -9,6 +9,7 @@ tinymce.init({selector:'.add-editor'});
 
 $(document).ready(function(){
 
+    $('[data-toggle="tooltip"]').tooltip();
 //    input file
     $(document).on('click', '#close-preview', function(){
         $('.image-preview').popover('hide');
