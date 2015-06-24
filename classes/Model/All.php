@@ -188,7 +188,7 @@ class Model_All extends Model
                 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = :tab AND TABLE_SCHEMA = :bas');
             $name_table->param(':tab', $table);
             $name_table->param(':bas', Kohana::$config->load('crudconfig.database'));
-            $name_table = $name_table->cached()->execute()->as_array();
+            $name_table = $name_table->execute()->as_array();
 
             $join_arr = array();
             $result_mod = array();
@@ -218,7 +218,7 @@ class Model_All extends Model
             $name_colums_table->param(':tab', $table);
             $name_colums_table->param(':bas', Kohana::$config->load('crudconfig.database'));
 
-            return $name_colums_table->cached()->execute()->as_array();
+            return $name_colums_table->execute()->as_array();
         }
     }
 

@@ -26,7 +26,7 @@
                     <div class="entry input-group">
                         <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" data-toggle="tooltip"
                                data-placement="bottom"
-                               title="<?=isset($title) ? $title : ''?>" value="<?=$row?>">
+                               title="<?=isset($title) ? $title : ''?>" value='<?=$row?>'>
                         <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
                         <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
@@ -40,7 +40,7 @@
                 <div class="entry input-group">
                     <input class="form-control" type="<?=$type_field?>" name="<?=$name_fied?>[]" data-toggle="tooltip"
                            data-placement="bottom"
-                           title="<?=isset($title) ? $title : ''?>" value="<?=$arr_value?>">
+                           title="<?=isset($title) ? $title : ''?>" value='<?=$arr_value?>'>
                     <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
                     <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
                             <span class="input-group-btn">
@@ -107,7 +107,7 @@
                           title="<?=isset($title) ? $title : ''?>"
                           type="<?=$type_field?>"
                           name="<?=$name_fied?>"
-                          value="<?if (!empty($value_fild)) echo $value_fild?>"
+                          value='<?if (!empty($value_fild)) echo $value_fild?>'
                           id="<?=$name_fied?>"/>
         <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
         <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
@@ -117,11 +117,11 @@
             <input <?=$attr?> class="form-control"
                               type="text"
                               data-toggle="tooltip"
-                              title="<?=isset($title) ? $title : ''?>"
+                              title='<?=isset($title) ? $title : ''?>'
                               data-placement="bottom"
                               readonly
                               name="<?=$name_fied?>"
-                              value="<?if (!empty($value_fild)) echo $value_fild?>"
+                              value='<?if (!empty($value_fild)) echo $value_fild?>'
                               id="<?=$name_fied?>"/>
             <span class="glyphicon glyphicon-remove form-control-feedback" style="display: none"></span>
             <span class="glyphicon glyphicon-ok form-control-feedback" style="display: none"></span>
