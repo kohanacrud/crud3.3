@@ -1,5 +1,18 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
+<?if (!empty($edit_property['scripts_edit'])):?>
+    <?foreach ($edit_property['scripts_edit'] as $rows):?>
+        <?=HTML::script($rows)?>
+    <?endforeach?>
+<?endif?>
+
+<?if (!empty($edit_property['styles_edit'])):?>
+    <?foreach ($edit_property['styles_edit'] as $rows):?>
+        <?=HTML::style($rows)?>
+    <?endforeach?>
+<?endif?>
+
+<!--    HTML::script-->
 <?=isset($script_validate) ? $script_validate:''?>
 
 <script>
@@ -17,7 +30,7 @@
 
 
 </script>
-<!--<pre>--><?//die(print_r($edit_property))?><!--</pre>-->
+<!--<pre>--><?//print_r($edit_property)?><!--</pre>-->
 
     <div class="row">
         <div class="col-md-12">

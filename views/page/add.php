@@ -1,4 +1,15 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
+<?if (!empty($add_property['scripts_add'])):?>
+    <?foreach ($add_property['scripts_add'] as $rows):?>
+        <?=HTML::script($rows)?>
+    <?endforeach?>
+<?endif?>
+
+<?if (!empty($add_property['styles_add'])):?>
+    <?foreach ($add_property['styles_add'] as $rows):?>
+        <?=HTML::style($rows)?>
+    <?endforeach?>
+<?endif?>
 
 <?=isset($script_validate) ? $script_validate:''?>
 

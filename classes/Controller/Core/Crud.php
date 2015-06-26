@@ -418,9 +418,20 @@ class Controller_Core_Crud extends Controller_Core_Main {
             }
         }
 
+        $scripts_edit = null;
+        $styles_edit = null;
+        if ($retw->add_script_edit != null) {
+            $scripts_edit = $retw->add_script_edit;
+        }
+
+        if ($retw->add_style_edit != NULL) {
+            $styles_edit = $retw->add_style_edit;
+        }
 
         $viev_edit->curent_uri = $retw->curent_uri;
         $viev_edit->edit_property = array('field' => $field,
+                                            'scripts_edit' => $scripts_edit,
+                                            'styles_edit' => $styles_edit,
                                             'toptip' => $retw->toptip_fields,
                                             'select_muliselect' => $select_multiselect,
                                             'disable_editor' => $disable_editor, //отключение редактора
@@ -789,9 +800,20 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
         }
 
+        $scripts_add = null;
+        $styles_add = null;
+        if ($retw->add_script_add != null) {
+            $scripts_add = $retw->add_script_add;
+        }
+
+        if ($retw->add_style_add != NULL) {
+            $styles_add = $retw->add_style_add;
+        }
 
         $viev_add->curent_uri = $retw->curent_uri;
         $viev_add->add_property = array('field' => $fields,
+            'scripts_add' => $scripts_add,
+            'styles_add' => $styles_add,
             'toptip' => $retw->toptip_fields,
             'obj' => $_GET['obj'],
             'disable_editor' => $disable_editor, //отключение редактора

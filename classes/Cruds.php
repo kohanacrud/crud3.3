@@ -65,6 +65,11 @@ class Cruds extends Controller_Core_Main {
     public $table_join_key = null; //масив таблица поле pri table@pagespri
     public static $id = null; //хранит id записи
 
+    public $add_script_edit = null; //хранит масив путей к файлам скриптов
+    public $add_script_add = null;
+    public $add_style_edit = null;
+    public $add_style_add = null;
+
     public function __construct () {
         parent::before();
     }
@@ -778,6 +783,22 @@ class Cruds extends Controller_Core_Main {
      */
     public function toptip_fields ($arr){
         $this->toptip_fields = $arr;
+    }
+
+    public function add_script_edit (){
+        $this->add_script_edit = func_get_args();
+    }
+
+    public function add_script_add (){
+        $this->add_script_add = func_get_args();
+    }
+
+    public function add_style_edit (){
+        $this->add_style_edit = func_get_args();
+    }
+
+    public function add_style_add (){
+        $this->add_style_add = func_get_args();
     }
 
 }
