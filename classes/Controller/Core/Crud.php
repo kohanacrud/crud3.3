@@ -79,8 +79,7 @@ class Controller_Core_Crud extends Controller_Core_Main {
             call_user_func(array($re['callback_functions_array']['class'],
                 $retw->callback_after_delete['name_function']), $query_array_del);
         }
-
-        Request::initial()->redirect($retw->curent_uri);
+        
 
     }
 
