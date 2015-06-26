@@ -268,7 +268,7 @@ class Model_All extends Model
     public function count_table ($table, $set_where = null) {
 
         if ($set_where != null) {
-            $sele_where = 'WHERE '.$set_where['colum'].$set_where['operation'].$set_where['value'];
+            $sele_where = 'WHERE '.$set_where['colum'].' '.$set_where['operation'].' '.$set_where['value'];
             $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table.' '.$sele_where);
         } else {
             $count_table =  DB::query(Database::SELECT,'SELECT COUNT(*) FROM '.$table);
@@ -411,7 +411,7 @@ class Model_All extends Model
 
         //формируем часть запроса для метода условия выборки seе_where()
         if ($set_where != null) {
-            $sele_where = ' WHERE '.$set_where['colum'].$set_where['operation'].$set_where['value'];
+            $sele_where = ' WHERE '.$set_where['colum'].' '.$set_where['operation'].' '.$set_where['value'];
         } else {
             $sele_where = '';
         }
