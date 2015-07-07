@@ -19,6 +19,8 @@
 
 
     $(document).on('click', '#loading-example-btn', function(){
+        $(this).attr('disabled', true);
+        $('#circularG').show();
         var form_edit = $('#w-form-edit');
         tinyMCE.triggerSave();
         form_edit.attr('target','hiddenframe');
@@ -31,6 +33,25 @@
 
 </script>
 <!--<pre>--><?//print_r($edit_property)?><!--</pre>-->
+
+    <div id="circularG" style="display: none">
+        <div id="circularG_1" class="circularG">
+        </div>
+        <div id="circularG_2" class="circularG">
+        </div>
+        <div id="circularG_3" class="circularG">
+        </div>
+        <div id="circularG_4" class="circularG">
+        </div>
+        <div id="circularG_5" class="circularG">
+        </div>
+        <div id="circularG_6" class="circularG">
+        </div>
+        <div id="circularG_7" class="circularG">
+        </div>
+        <div id="circularG_8" class="circularG">
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -228,7 +249,9 @@
                         <input type="hidden" name="obj" value="<?=$edit_property['obj']?>"/>
                         <input type="hidden" name="edit"/>
                         <input type="hidden" name="curent_uri" value="<?=$curent_uri?>"/>
-                        <button type="submit" id="loading-save" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <?if ($edit_property['remove_save'] !== true):?>
+                            <button type="submit" id="loading-save" class="btn btn-success btn-lg"><?=__('LANG_SAVE')?> <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                        <?endif?>
                         <button type="button" id="loading-example-btn" data-loading-text="<?=__('LANG_BUTTON_LOAD_APLY')?>" class="btn btn-primary btn-lg"><?=__('LANG_BUTTON_APLY')?> <span class="glyphicon glyphicon-floppy-saved"></span></button>
                     </div>
                 </div>

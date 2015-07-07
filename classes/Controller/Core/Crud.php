@@ -322,6 +322,10 @@ class Controller_Core_Crud extends Controller_Core_Main {
 
             }
 
+            echo '<script type="text/javascript">';
+            echo 'window.parent.document.getElementById("circularG").style.display="none";';
+            echo 'window.parent.document.getElementById("loading-example-btn").disabled = false';
+            echo '</script>';
 
             Controller::redirect($_POST['curent_uri']);
         }
@@ -427,11 +431,18 @@ class Controller_Core_Crud extends Controller_Core_Main {
             $styles_edit = $retw->add_style_edit;
         }
 
+        if (isset($get['edit_renderer'])) {
+            $edite_render = true;
+        } else {
+            $edite_render = false;
+        }
+
         $viev_edit->curent_uri = $retw->curent_uri;
         $viev_edit->edit_property = array('field' => $field,
                                             'scripts_edit' => $scripts_edit,
                                             'styles_edit' => $styles_edit,
                                             'toptip' => $retw->toptip_fields,
+                                            'remove_save' => $edite_render,
                                             'select_muliselect' => $select_multiselect,
                                             'disable_editor' => $disable_editor, //отключение редактора
                                             'new_type_field' => $new_type_field, //типы полей для переопределения дефолтных

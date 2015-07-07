@@ -139,7 +139,7 @@ class Cruds extends Controller_Core_Main {
         $obj = base64_encode(serialize($this->object_serial));
 
         $this->curent_uri = $_SERVER['REQUEST_URI'];
-        return Request::factory('core_crud/edit?obj='.$obj.'&id='.$id)->execute()->body();
+        return Request::factory('core_crud/edit?obj='.$obj.'&id='.$id.'&edit_renderer=1')->execute()->body();
     }
 
     //метод рендера круда
