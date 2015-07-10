@@ -5,9 +5,25 @@
  * Time: 0:09
  * To change this template use File | Settings | File Templates.
  */
-tinymce.init({selector:'.add-editor'});
+
 
 $(document).ready(function(){
+
+
+    tinymce.init({
+        selector:'.add-editor',
+
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste jbimages"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image jbimages",
+        relative_urls: false
+
+    });
+
+
 
     $('[data-toggle="tooltip"]').tooltip();
 //    input file
